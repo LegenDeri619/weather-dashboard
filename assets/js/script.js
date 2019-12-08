@@ -20,23 +20,24 @@ $(document).ready(function(){
     var convertKtoF = function(temp){
       return f= ((temp - 273.15) * 1.80 + 32).toFixed(1);
     };
+
     var cityDiv = $(".current-city");
     var windDiv = $(".current-wind");
     var humidityDiv = $(".current-humidity");
     var tempDiv = $(".current-temp");
 
-    console.log(response.name);
-    console.log(response.wind.speed);
-    console.log(response.main.humidity);
-    console.log(response.main.temp);
+    var latitude = response.coord.lat;
+    var longitude = response.coord.lon; 
+    var cityID = response.id; 
 
-    cityDiv.append("City: " + response.name);
+    var iconcode = response.weather[0].icon;
+    var iconurl = "http://openweathermap.org/img/w/" + iconcode + ".png";
+
+    cityDiv.append("<h2>" + response.name + "</h2>");
     tempDiv.append("Current Temp: " + convertKtoF(response.main.temp) + "\xB0" + "F");
     humidityDiv.append("Humidity: " + response.main.humidity + " %");
     windDiv.append("Wind: " + response.wind.speed + "MPH");
-
-    var latitude = response.coord.lat;
-    var longitude = response.coord.lon;    
+    $('#wicon').attr('src', iconurl);    
 
     var UVindex = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + latitude + "&lon=" + longitude;
 
@@ -44,17 +45,13 @@ $(document).ready(function(){
       url: UVindex,
       method: "GET"
     }).then(function(response) {
-  
-      console.log(UVindex);
-      console.log(response);
         
       var uvDiv = $(".current-UV");
       uvDiv.append("UV Index: " + response.value);   
       });
-     
-    });
 
-    var fiveDayForecast = "http://api.openweathermap.org/data/2.5/forecast?lat=" + latitude + "&lon=" + longitude;
+    
+    var fiveDayForecast = "http://api.openweathermap.org/data/2.5/forecast?id=" + cityID + "&APPID=" + APIkey;
 
       $.ajax({
         url: fiveDayForecast,
@@ -70,6 +67,10 @@ $(document).ready(function(){
         };
   
       });
+     
+    });
+
+    
     
  
  
