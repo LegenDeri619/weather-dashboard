@@ -1,11 +1,10 @@
 var APIkey = "ab8bf4630ed81e21165709c4573cb202";
-var city = "San Diego";
-var cities = [];
-var cnt = "5";
+var city = "Riverside";
+var cities = ["San Diego"];
 
 $(document).ready(function(){
 
-  var currentWeather = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey + "&cnt=5";
+  var currentWeather = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
    
   
   $.ajax({
@@ -90,37 +89,38 @@ $(document).ready(function(){
         
   
       });
-     
+
+      //need to fix render and search
+
+      function renderButtons() {
+
+        $("#city-list").empty();
+      
+        for (var i = 0; i < cities.length; i++) {
+          
+          var a = $("<button>");
+          a.addClass("city");
+          a.attr("data-name", cities[i]);
+          a.text(cities[i]);
+          $("#city-list").append(a);
+        }
+      }
+      
+      $("#search-city").on("click", function(event) {
+        event.preventDefault();
+      
+        var citySearch = $("#search-city").val().trim();
+        cities.push(citySearch);
+      
+        renderButtons();
+      });
+      renderButtons();
     });
 
-    
-    
- 
- 
-function renderButtons() {
+     
 
-  $("#city-list").empty();
 
-  for (var i = 0; i < cities.length; i++) {
-    
-    var a = $("<button>");
-    a.addClass("city-btn");
-    a.attr("data-name", city[i]);
-    a.text(city[i]);
-    $("#city-list").append(a);
-  }
-}
 
-$("#search").on("click", function(event) {
-  event.preventDefault();
-
-  var citySearch = $("#search").val().trim();
-  city.push(citySearch);
-
-  renderButtons();
-});
-
-renderButtons();
 })
 
 
