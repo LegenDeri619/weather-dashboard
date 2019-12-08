@@ -35,6 +35,7 @@
                     <div class = "current-wicon"><img id="wicon" src="" alt="Weather icon"></div>
                     <ul>
                         <li><div class = "current-city"></div></li>
+                        <li><div class = "current-date"></div></li>
                         <li><div class = "current-temp"></div></li>
                         <li><div class = "current-humidity"></div></li>
                         <li><div class = "current-wind"></div></li>
@@ -43,8 +44,9 @@
 
                 </div>
 
-                <div class = "row" id = "fiveDayForecast">
-                    5-day forecast here
+                <div class = "row">
+                    <h2>5-Day Forecast</h2>
+                    <div id = "fiveDayForecast"></div>
                 </div>
 
             </div>
@@ -52,5 +54,16 @@
     </div>
 
     <script src="assets/js/script.js"></script>
+    <script src="assets/lib/moment.min.js"></script>
     </body>
+
+    <!-- <template>
+        <div class = "card card5day">
+            <img class = "icon5">
+            <h5 class = "date5"></h5>
+            <p class = "temp5"></p>
+            <br>
+            <p class = "humidity5"></p>
+        </div>
+    </template> -->
 </html>
