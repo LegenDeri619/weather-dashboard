@@ -1,12 +1,53 @@
 var APIkey = "ab8bf4630ed81e21165709c4573cb202";
-var city = "Riverside";
-var cities = ["San Diego"];
+var city = "Seattle";
+var cities = ["San Diego", "Riverside"];
 
 $(document).ready(function(){
+  
+  displayWeatherInfo(city)
+  renderButtons();
+ 
+
+});
+
+      //need to fix render and search
+
+function renderButtons() {
+
+  $("#city-list").empty();
+
+  for (var i = 0; i < cities.length; i++) {
+    
+    var a = $("<button>");
+    a.addClass("city");
+    a.attr("data-name", cities[i]);
+    a.text(cities[i]);          
+    $("<br>").appendTo(a);
+    $("#city-list").append(a);
+  }
+};
+      
+$("#search-city").on("submit", function(event) {
+  event.preventDefault();
+  console.log("search-city clicked");
+
+  var citySearch = $("#search-city").val().trim();
+  cities.push(citySearch);
+
+  renderButtons();
+
+$(document).on("click", ".city", displayWeatherInfo);
+
+});
+
+
+function displayWeatherInfo(city) {
+  //var city = $(this).attr("data-name");
+  // $("#current-weather").empty();
+  // $("#fiveDayForecast").empty();
 
   var currentWeather = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
-   
-  
+    
   $.ajax({
     url: currentWeather,
     method: "GET"
@@ -37,7 +78,7 @@ $(document).ready(function(){
     dateDiv.append("<h4>" + moment(response.coord.dt).format("dddd, MMMM Do, YYYY") + "<h4>");
     tempDiv.append("Temperature: " + convertKtoF(response.main.temp) + "\xB0" + "F");
     humidityDiv.append("Humidity: " + response.main.humidity + " %");
-    windDiv.append("Wind: " + response.wind.speed + "MPH");
+    windDiv.append("Wind: " + response.wind.speed + " MPH");
     $('#wicon').attr('src', iconurl);    
 
     var UVindex = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + latitude + "&lon=" + longitude;
@@ -63,16 +104,23 @@ $(document).ready(function(){
         console.log(response);
         console.log(moment(response.list[0].dt_txt).format("MMMM Do"));
 
+        
+
         for (var i = 3; i < response.list.length; i += 8) {
           var iconSRC = "http://openweathermap.org/img/w/" + response.list[i].weather[0].icon + ".png";
+          var fiveDayDiv = $("<div>").attr("class", "fiveDayCard");
 
-          $("<div>").attr("class", "card").attr("id", moment(response.list[i].dt)).appendTo("#fiveDayForecast");
-          $("<h5>").html(moment(response.list[i].dt_txt).format("MMMM Do")).appendTo("#fiveDayForecast");
-          $("<img>").attr("src", iconSRC).appendTo("#fiveDayForecast");
-          $("<p>").html("Temperature: " + convertKtoF(response.list[i].main.temp) + "\xB0" + "F").appendTo("#fiveDayForecast");
-          $("<p>").html(response.list[i].main.humidity + " %").appendTo("#fiveDayForecast");
+          fiveDayDiv.attr("class", "card").attr("id", moment(response.list[i].dt)).appendTo(fiveDayDiv);
+          $("<h5>").html(moment(response.list[i].dt_txt).format("MM / D")).appendTo(fiveDayDiv);
+          $("<img>").attr("src", iconSRC).attr("class", "fiveDayIcon").appendTo(fiveDayDiv);
+          $("<p>").html("Temp: " + convertKtoF(response.list[i].main.temp) + "\xB0" + "F").appendTo(fiveDayDiv);
+          $("<p>").html("Humidity: "+response.list[i].main.humidity + " %").appendTo(fiveDayDiv);
+
+          fiveDayDiv.appendTo("#fiveDayForecast");
           
       }; 
+
+      renderButtons();
 
 
       // for (var i = 3; i < response.list.length; i += 8) {
@@ -86,45 +134,7 @@ $(document).ready(function(){
       //     .appendTo("#fiveDayForecast");
       // };          
                
-        
-  
-      });
-
-      //need to fix render and search
-
-      function renderButtons() {
-
-        $("#city-list").empty();
-      
-        for (var i = 0; i < cities.length; i++) {
-          
-          var a = $("<button>");
-          a.addClass("city");
-          a.attr("data-name", cities[i]);
-          a.text(cities[i]);
-          $("#city-list").append(a);
-        }
-      }
-      
-      $("#search-city").on("click", function(event) {
-        event.preventDefault();
-      
-        var citySearch = $("#search-city").val().trim();
-        cities.push(citySearch);
-      
-        renderButtons();
-      });
-      renderButtons();
     });
 
-     
-
-
-
-})
-
-
-
-    
-
-  
+  });
+};
